@@ -1,0 +1,41 @@
+developer@b79252c455eb:/tmp$ sudo patch -i winetricks.patch /usr/bin/winetricks.bak                                                    
+--- /usr/bin/winetricks.bak     2017-03-03 23:03:24.778982883 +0000
++++ /usr/bin/winetricks 2017-03-03 23:04:34.410981636 +0000
+@@ -9118,6 +9118,38 @@
+         w_try_regedit "$W_TMP_WIN"\\set-psdk7.reg
+     fi
+ }
++#----------------------------------------------------------------
++
++w_metadata python27 dlls \
++    title="Python Interpreter, version 2.7.10" \
++    publisher="Python Software Foundaton" \
++    year="2009" \
++    media="download" \
++    file1="python-2.7.10.msi" \
++    installed_exe1="c:/Python27/python.exe"
++
++load_python27()
++{
++    w_download https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi 9e62f37407e6964ee0374b32869b7b4ab050d12a
++
++    cd "$W_CACHE"/python27
++
++    w_ahk_do "
++        SetTitleMatchMode, 2
++        run msiexec /i python-2.7.10.msi ALLUSERS=1
++        WinWait, Python 2.7.10 Setup, Select whether to install
++        ControlClick Button4   ; next
++        WinWait, Python 2.7.10 Setup, select a directory
++        ControlClick Button1   ; next
++        WinWait, Python 2.7.10 Setup, Select the way you want
++        ControlClick Button2   ; next
++        WinWait, Python 2.7.10 Setup, Complete the Python
++        ControlClick Button1   ; Finish
++        WinWaitClose
++        "
++}
++
++#----------------------------------------------------------------
+ 
+ #----------------------------------------------------------------
