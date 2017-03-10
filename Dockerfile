@@ -70,7 +70,9 @@ RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe wxclicker.py wxPython3.0-wi
 RUN wget https://pypi.python.org/packages/f8/65/4f4ad8e803c97335bf789ad19cc48a4e4b5069d779a50340b3229f24cbff/pyOpenSSL-0.13.winxp32-py2.7.msi
 RUN /tmp/run-in-x11.sh wine msiexec /q /i pyOpenSSL-0.13.winxp32-py2.7.msi
 
+RUN wget https://sourceforge.net/projects/nsis/files/NSIS%203/3.01/nsis-3.01-setup.exe
+RUN wine nsis-3.01-setup.exe /S
 
-#docker build -t xvfb .
+#docker build -t saltlakeryan/xvfb-wine-python .
 #docker run --net=host -it --rm -e DISPLAY=:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v ~/.wine.docker:/home/developer/.wine -v ~/.Xauthority:/home/developer/.Xauthority -u developer xvfb bash
 #docker run -it --rm -u developer -p 5900:5900 -v ~/dev/screenlock-package:/lock xvfb bash
