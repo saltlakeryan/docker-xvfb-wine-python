@@ -52,6 +52,7 @@ RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\easy
 RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\pip.exe install jinja2==2.8
 RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\pip.exe install flask==0.12
 RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\pip.exe install pyinstaller
+RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\pip.exe install requests
 RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\easy_install.exe pyHook-1.5.1.win32-py2.7.exe
 
 ADD scripts/install-rocket.sh /tmp/install-rocket.sh
@@ -64,14 +65,19 @@ RUN wget https://pypi.python.org/packages/b4/96/abc8938fa7c9754aebe8e3bfc1ae5bc9
 RUN /tmp/run-in-x11.sh wine msiexec /q /i Twisted-15.2.1.win32-py2.7.msi
 
 RUN wget https://sourceforge.net/projects/wxpython/files/wxPython/3.0.2.0/wxPython3.0-win32-3.0.2.0-py27.exe
+
+ADD scripts/register-python.py /tmp/register-python.py
+RUN cd /tmp && /tmp/run-in-x11.sh wine C:\\Python27\\python.exe register-python.py
+
 ADD scripts/wxclicker.py /tmp/wxclicker.py
+RUN wine C:\\Python27\\python.exe register-python.py
 RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe wxclicker.py wxPython3.0-win32-3.0.2.0-py27.exe
 
 RUN wget https://pypi.python.org/packages/f8/65/4f4ad8e803c97335bf789ad19cc48a4e4b5069d779a50340b3229f24cbff/pyOpenSSL-0.13.winxp32-py2.7.msi
 RUN /tmp/run-in-x11.sh wine msiexec /q /i pyOpenSSL-0.13.winxp32-py2.7.msi
 
 RUN wget https://sourceforge.net/projects/nsis/files/NSIS%203/3.01/nsis-3.01-setup.exe
-RUN wine nsis-3.01-setup.exe /S
+RUN /tmp/run-in-x11.sh wine nsis-3.01-setup.exe /S
 
 #docker build -t saltlakeryan/xvfb-wine-python .
 #docker run --net=host -it --rm -e DISPLAY=:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v ~/.wine.docker:/home/developer/.wine -v ~/.Xauthority:/home/developer/.Xauthority -u developer xvfb bash
