@@ -47,13 +47,14 @@ RUN /tmp/run-in-x11.sh winetricks -q python27
 
 RUN wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\easy_install.exe pywin32-219.win32-py2.7.exe
 
-RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\easy_install.exe psutil-1.2.1.win32-py2.7.exe
+# RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\easy_install.exe psutil-1.2.1.win32-py2.7.exe
 
 RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\pip.exe install jinja2==2.8
 RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\pip.exe install flask==0.12
 RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\pip.exe install pyinstaller
 RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\pip.exe install requests
-RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\easy_install.exe pyHook-1.5.1.win32-py2.7.exe
+ADD dependencies/pyHook-1.5.1-cp27-none-win32.whl /tmp/pyHook-1.5.1-cp27-none-win32.whl
+RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe C:\\Python27\\Scripts\\pip.exe install pyHook-1.5.1-cp27-none-win32.whl
 
 ADD scripts/install-rocket.sh /tmp/install-rocket.sh
 RUN /tmp/install-rocket.sh
@@ -78,6 +79,13 @@ RUN /tmp/run-in-x11.sh wine msiexec /q /i pyOpenSSL-0.13.winxp32-py2.7.msi
 
 RUN wget https://sourceforge.net/projects/nsis/files/NSIS%203/3.01/nsis-3.01-setup.exe
 RUN /tmp/run-in-x11.sh wine nsis-3.01-setup.exe /S
+
+ADD dependencies/psutil-1.2.1.win32-py2.7.exe /tmp/psutil-1.2.1.win32-py2.7.exe
+ADD scripts/psutilclicker.py /tmp/psutilclicker.py
+RUN /tmp/run-in-x11.sh wine C:\\Python27\\python.exe psutilclicker.py psutil-1.2.1.win32-py2.7.exe
+
+RUN cp -r /home/developer/.wine/drive_c/Python2.7/Scripts/* /home/developer/.wine/drive_c/Python27/Scripts/
+RUN cp -r /home/developer/.wine/drive_c/Python2.7/Lib/* /home/developer/.wine/drive_c/Python27/Lib/
 
 #docker build -t saltlakeryan/xvfb-wine-python .
 #docker run --net=host -it --rm -e DISPLAY=:0 -v /tmp/.X11-unix:/tmp/.X11-unix -v ~/.wine.docker:/home/developer/.wine -v ~/.Xauthority:/home/developer/.Xauthority -u developer xvfb bash
